@@ -6,39 +6,16 @@ rapidjson = require("rapidjson")
 --------------START OF TABLE DECLARATIONS---------
 tblConfig = {}
 ComponentsTbl = Component.GetComponents()
-RacklinkModules = {}
-AverCamModules = {}
-NetgearModules = {}
-TCC2Modules = {}
+PluginModules = {}
 --------------END OF TABLE DECLARATIONS-----------
 
 funcGetComponents = function()
   for key, value in pairs(ComponentsTbl) do 
-    print(value.Name)
-    --If the name of any component found in GetComponents() contains AVerPTZCamera, then import the component into the script with its existing name
-    if string.find(value.Name, 'AVerPTZCamera', 1, true) then 
-      AverCamModules[value.Name] = Component.New(value.Name)
+    print(value.Name, value.Type)
+    --If the type of component is a plugin, then add the component to the PluginModules table
+    if value.Type = "plugin" then 
+      PluginModules[value.Name] = Component.New(value.Name)
     end 
-    --If the name of any component found in GetComponents() contains Racklink, then import the component into the script with its existing name
-    if string.find(value.Name, 'Racklink', 1, true) then 
-      RacklinkModules[value.Name] = Component.New(value.Name)
-    end
-    --If the name of any component found in GetComponents() contains Netgear, then import the component into the script with its existing name
-    if string.find(value.Name, 'Netgear', 1, true) then 
-      NetgearModules[value.Name] = Component.New(value.Name)
-    end
-    --If the name of any component found in GetComponents() contains AudLDisplay, then import the component into the script with its existing name
-    if value.Name == 'AudLDisplay' then 
-      AudLDisplayModule = Component.New('AudLDisplay')
-    end
-    --If the name of any component found in GetComponents() contains AudRDisplay, then import the component into the script with its existing name
-    if value.Name == 'AudRDisplay' then 
-      AudRDisplayModule = Component.New('AudRDisplay')
-    end
-    --If the name of any component found in GetComponents() contains TCC2, then import the component into the script with its existing name
-    if string.find(value.Name, 'TCC2', 1, true) then 
-      TCC2Modules[value.Name] = Component.New(value.Name)
-    end
   end 
 end 
 
@@ -98,26 +75,25 @@ funcReadEncryptedConfig = function()
 
       if tblConfig ~= nil then 
         print("JSON decoded successfully:")
-        for key, value in pairs(tblConfig) do 
-          if key == "Racklinks" then 
-            if type(value) == "table" then 
-              for k1, v1 in pairs(value) do  
-                for racklinkName, racklinkComp in pairs(RacklinkModules) do
-                  --print(racklinkName, racklinkComp)
-                  if string.find(k1, racklinkName, 1, true) then 
-                    for k2, v2 in pairs(v1) do 
-                      if k2 == "IpAddress" then 
-                        racklinkComp['IPAddress'].String = v2
-                      elseif k2 == "Username" then 
-                        racklinkComp['Username'].String = v2
-                      elseif k2 == "Password" then 
-                        racklinkComp['Password'].String = v2
-                      end 
-                    end
+        for key, value in pairs(tblConfig) do  
+          if type(value) == "table" then 
+            for k1, v1 in pairs(value) do  
+              for pluginName, pluginComp in pairs(PluginModules) do
+                --print(racklinkName, racklinkComp)
+                 if string.find(k1, pluginName, 1, true) then 
+                  for k2, v2 in pairs(v1) do 
+                    if k2 == "IpAddress" then 
+                      pluginComp['IPAddress'].String = v2
+                    elseif k2 == "Username" then 
+                      pluginComp['Username'].String = v2
+                    elseif k2 == "Password" then 
+                      pluginComp['Password'].String = v2
+                    end 
                   end
-                end  
-              end 
+                end
+              end  
             end 
+          end 
           elseif key == "AVerCameras" then 
             if type(value) == "table" then 
               for k1, v1 in pairs(value) do  
