@@ -13,7 +13,7 @@ end
 
 -- The name that will initially display when dragged into a design
 function GetPrettyName(props)
-  return PluginInfo.Name..", version " .. PluginInfo.Version
+  return PluginInfo.Name.."
 end
 
 -- Define User configurable Properties of the plugin

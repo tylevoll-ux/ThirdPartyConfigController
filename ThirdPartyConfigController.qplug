@@ -4,9 +4,9 @@
 -- Updated April 2026
 
 -- Information block for the plugin
-BuildVersion = "0.0.0.55" -- updated by the compiler
+BuildVersion = "0.0.0.68" -- updated by the compiler
 PluginInfo = {
-  Name = "folder~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
+  Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
   Id = "66f7acb0-4d4d-4f88-9597-e6516d394d8f",
   Author = "Tyler Vollett",
@@ -21,7 +21,7 @@ end
 
 -- The name that will initially display when dragged into a design
 function GetPrettyName(props)
-  return PluginInfo.Name..", version " .. PluginInfo.Version
+  return PluginInfo.Name.."
 end
 
 -- Define User configurable Properties of the plugin
@@ -90,12 +90,29 @@ function GetControls(props)
   table.insert(ctrls, {
     Name = "Update Schedule Days",
     ControlType = "Button",
-    ButtonType = "Momentary",
+    ButtonType = "Toggle",
     Count = 7,
     UserPin = true,
     PinStyle = "Both",
   })
+  
+  table.insert(ctrls, {
+    Name = "Enable Schedule Days",
+    ControlType = "Button",
+    ButtonType = "Toggle",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Both",
+  })
     
+  table.insert(ctrls, {
+    Name = "Encryption",
+    ControlType = "Button",
+    ButtonType = "Toggle",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Both",
+  })
   
   return ctrls
 end
@@ -111,7 +128,7 @@ function GetControlLayout(props)
     local varSpacing = 20 --element spacing variable
     local tblFillColor = {200,200,200} --groupbox fill color
     local varW = 550 --groupbox initial width
-    local varH = 100 --groupbox initial height
+    local varH = 125 --groupbox initial height
     local varPadding = 12 --padding variable
     local varHeaderOffset = 16 --offset for the groupbox header text
     local varCornerRadius = 8 --corner radius 
@@ -207,6 +224,7 @@ function GetControlLayout(props)
       Size = {varW - (varPadding * 4),varH - (varHeaderOffset + (varPadding * 2))},
       HTextAlign = "Center",
       CornerRadius = varCornerRadius,
+      Legend = "Manual Update",
       --TextBoxStyle = "NoBackground",
     }
   
@@ -215,7 +233,7 @@ function GetControlLayout(props)
     for i = 1,7 do 
       layout["Update Schedule Days "..i] = {
         Style = "Button",
-        ButtonStyle = "Momentary",
+        ButtonStyle = "Toggle",
         Position = {varXi + varSpacing + varW + (varPadding * 2) + (varWDays*(i-1)) + (varPadding*(i-1)) ,varYi + varHeaderOffset + (varSpacing + varH) + varPadding },
         Size = {varWDays,varHDays},
         HTextAlign = "Center",
@@ -224,6 +242,29 @@ function GetControlLayout(props)
         --TextBoxStyle = "NoBackground",
       }
     end
+  
+    --Enable Schedule Button
+    layout["Enable Schedule Days"] = {
+      Style = "Button",
+      ButtonStyle = "Toggle",
+      Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varHeaderOffset + (varSpacing + varH) + varPadding + varHDays + (varSpacing/2)},
+      Size = {varW - (varPadding * 4),varH - (varHeaderOffset + (varPadding * 6))},
+      HTextAlign = "Center",
+      CornerRadius = varCornerRadius,
+      Legend = "Enable Automatic Scheduling",
+      --TextBoxStyle = "NoBackground",
+    }
+  
+    layout["Encryption"] = {
+      Style = "Button",
+      ButtonStyle = "Toggle",
+      Position = {varXi + varSpacing + varW + (varPadding * 2),(varYi + varHeaderOffset + varPadding + varH)*2},
+      Size = {varW - (varPadding * 4),varH - (varHeaderOffset + (varPadding * 2))},
+      HTextAlign = "Center",
+      CornerRadius = varCornerRadius,
+      Legend = "Enable Encryption",
+      --TextBoxStyle = "NoBackground",
+    }
   
   elseif CurrentPage == "Setup" then
     -- TBD

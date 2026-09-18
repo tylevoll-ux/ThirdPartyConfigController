@@ -5,7 +5,7 @@ if CurrentPage == "Devices" then
   local varSpacing = 20 --element spacing variable
   local tblFillColor = {200,200,200} --groupbox fill color
   local varW = 550 --groupbox initial width
-  local varH = 100 --groupbox initial height
+  local varH = 125 --groupbox initial height
   local varPadding = 12 --padding variable
   local varHeaderOffset = 16 --offset for the groupbox header text
   local varCornerRadius = 8 --corner radius 
@@ -101,6 +101,7 @@ if CurrentPage == "Devices" then
     Size = {varW - (varPadding * 4),varH - (varHeaderOffset + (varPadding * 2))},
     HTextAlign = "Center",
     CornerRadius = varCornerRadius,
+    Legend = "Manual Update",
     --TextBoxStyle = "NoBackground",
   }
 
@@ -109,7 +110,7 @@ if CurrentPage == "Devices" then
   for i = 1,7 do 
     layout["Update Schedule Days "..i] = {
       Style = "Button",
-      ButtonStyle = "Momentary",
+      ButtonStyle = "Toggle",
       Position = {varXi + varSpacing + varW + (varPadding * 2) + (varWDays*(i-1)) + (varPadding*(i-1)) ,varYi + varHeaderOffset + (varSpacing + varH) + varPadding },
       Size = {varWDays,varHDays},
       HTextAlign = "Center",
@@ -118,6 +119,29 @@ if CurrentPage == "Devices" then
       --TextBoxStyle = "NoBackground",
     }
   end
+
+  --Enable Schedule Button
+  layout["Enable Schedule Days"] = {
+    Style = "Button",
+    ButtonStyle = "Toggle",
+    Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varHeaderOffset + (varSpacing + varH) + varPadding + varHDays + (varSpacing/2)},
+    Size = {varW - (varPadding * 4),varH - (varHeaderOffset + (varPadding * 6))},
+    HTextAlign = "Center",
+    CornerRadius = varCornerRadius,
+    Legend = "Enable Automatic Scheduling",
+    --TextBoxStyle = "NoBackground",
+  }
+
+  layout["Encryption"] = {
+    Style = "Button",
+    ButtonStyle = "Toggle",
+    Position = {varXi + varSpacing + varW + (varPadding * 2),(varYi + varHeaderOffset + varPadding + varH)*2},
+    Size = {varW - (varPadding * 4),varH - (varHeaderOffset + (varPadding * 2))},
+    HTextAlign = "Center",
+    CornerRadius = varCornerRadius,
+    Legend = "Enable Encryption",
+    --TextBoxStyle = "NoBackground",
+  }
 
 elseif CurrentPage == "Setup" then
   -- TBD
