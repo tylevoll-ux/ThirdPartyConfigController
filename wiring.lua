@@ -1,0 +1,1 @@
+-- table.insert( wiring, { "main_mixer Output 1","Audio Output" } )

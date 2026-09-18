@@ -1,0 +1,277 @@
+-- Basic Framework Plugin
+-- by QSC
+-- October 2020
+-- Updated April 2026
+
+-- Information block for the plugin
+BuildVersion = "0.0.0.55" -- updated by the compiler
+PluginInfo = {
+  Name = "folder~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
+  Version = BuildVersion,
+  Id = "66f7acb0-4d4d-4f88-9597-e6516d394d8f",
+  Author = "Tyler Vollett",
+  Description = "Plugin that works with a json file stored on the processor to automatically populate all usernames and passwords into third party plugins. JSON can be encrypted for additional security.",
+  -- Manufacturer = "", --optional field for manufacturer of what this plugin is controlling. In 10.2 and later this field is used in Schematic Elements menu as well
+}
+
+-- Define the color of the plugin object in the design
+function GetColor(props)
+  return { 102, 102, 102 }
+end
+
+-- The name that will initially display when dragged into a design
+function GetPrettyName(props)
+  return PluginInfo.Name..", version " .. PluginInfo.Version
+end
+
+-- Define User configurable Properties of the plugin
+function GetProperties()
+  local props = {}
+  table.insert(props, {
+    Name = "Debug Print",
+    Type = "enum",
+    Choices = {"None", "Tx/Rx", "Tx", "Rx", "Function Calls", "All"},
+    Value = "None"
+  })
+  
+  table.insert(props, {
+    Name = "JSON File Name",
+    Type = "string",
+    Value = "A String",
+  })
+  
+  return props
+end
+
+-- Optional function to update available properties when properties are altered by the user
+function RectifyProperties(props)
+  if props.plugin_show_debug.Value == false then 
+    props["Debug Print"].IsHidden = true 
+  end
+  return props
+end
+
+-- Optional function to define model if plugin supports more than one model. Uncomment if you have a Property named "Model" and don't define Model in PluginInfo
+-- function GetModel(props)
+--   local model = {}
+--   return model
+-- end
+
+-- Optional function used if plugin has multiple pages
+PageNames = { "Devices", "Setup" }  --List the pages within the plugin
+function GetPages(props)
+  local pages = {}
+  for _,value in ipairs(PageNames) do
+    table.insert(pages, {name = value})
+  end
+  return pages
+end
+
+-- Defines the Controls used within the plugin
+function GetControls(props)
+  local ctrls = {}
+  table.insert(ctrls, {
+    Name = "Classroom Name",
+    ControlType = "Text",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Output",
+  })
+  
+  table.insert(ctrls, {
+    Name = "Update Config",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 1,
+    UserPin = true,
+    PinStyle = "Input",
+  })
+   
+  table.insert(ctrls, {
+    Name = "Update Schedule Days",
+    ControlType = "Button",
+    ButtonType = "Momentary",
+    Count = 7,
+    UserPin = true,
+    PinStyle = "Both",
+  })
+    
+  
+  return ctrls
+end
+
+--Layout of controls and graphics for the plugin UI to display
+function GetControlLayout(props)
+  local layout = {}
+  local graphics = {}
+  local CurrentPage = PageNames[props["page_index"].Value]
+  if CurrentPage == "Devices" then
+    local varXi = 21 --initial x position
+    local varYi = 12 --initial y position
+    local varSpacing = 20 --element spacing variable
+    local tblFillColor = {200,200,200} --groupbox fill color
+    local varW = 550 --groupbox initial width
+    local varH = 100 --groupbox initial height
+    local varPadding = 12 --padding variable
+    local varHeaderOffset = 16 --offset for the groupbox header text
+    local varCornerRadius = 8 --corner radius 
+    local varWDays = 61 --width for schedule days buttons
+    local varHDays = 32 --height for schedule days buttons
+  
+    --Classroom Name Groupbox
+    table.insert(graphics,{
+      Type = "GroupBox",
+      Text = "Classroom Name",
+      Fill = tblFillColor,
+      StrokeWidth = 1,
+      Position = {varXi,varYi},
+      Size = {varW,varH},
+      CornerRadius = varCornerRadius,
+      HTextAlign = "Left",
+    })
+  
+    --Plugin Compatibility Groupbox
+    table.insert(graphics,{
+      Type = "GroupBox",
+      Text = "Plugin Compatibility",
+      Fill = tblFillColor,
+      StrokeWidth = 1,
+      Position = {varXi,varYi + varSpacing + varH},
+      Size = {varW,varH},
+      CornerRadius = varCornerRadius,
+      HTextAlign = "Left",
+    })
+  
+    --Plugin Compatibility Text
+    table.insert(graphics,{
+      Type = "Label",
+      Text = "Plugin is compatible with any other Device Plugins that use QSYS SDK Reserved Control Names for: IPAddress, Username, Password",
+      StrokeWidth = 1,
+      Position = {varXi + varPadding,varYi + varSpacing + varH + varHeaderOffset + varPadding},
+      Size = {varW - (varPadding * 2),varH - (varHeaderOffset + (varPadding * 2))},
+      HTextAlign = "Center",
+      StrokeWidth = 0,
+    })
+  
+    --Update Config Groupbox
+    table.insert(graphics,{
+      Type = "GroupBox",
+      Text = "Update Config",
+      Fill = tblFillColor,
+      StrokeWidth = 1,
+      Position = {varXi + varSpacing + varW,varYi},
+      Size = {varW,varH},
+      CornerRadius = varCornerRadius,
+      HTextAlign = "Left",
+    })
+  
+    --Encryption Groupbox
+    table.insert(graphics,{
+      Type = "GroupBox",
+      Text = "Scheduled Updates",
+      Fill = tblFillColor,
+      StrokeWidth = 1,
+      Position = {varXi + varSpacing + varW,varYi + varSpacing + varH},
+      Size = {varW,varH},
+      CornerRadius = varCornerRadius,
+      HTextAlign = "Left",
+    })
+  
+    --Scheduled Updates Groupbox
+    table.insert(graphics,{
+      Type = "GroupBox",
+      Text = "Encryption",
+      Fill = tblFillColor,
+      StrokeWidth = 1,
+      Position = {varXi + varSpacing + varW,varYi + ((varSpacing + varH)*2) },
+      Size = {varW,varH},
+      CornerRadius = varCornerRadius,
+      HTextAlign = "Left",
+    })
+  
+    --Classroom Name Control Layout
+    layout["Classroom Name"] = {
+      Style = "Text",
+      Position = {varXi + varPadding,varYi + varPadding + varHeaderOffset},
+      Size = {varW - (varPadding * 2),varH - (varHeaderOffset + (varPadding * 2))},
+      HTextAlign = "Center",
+      CornerRadius = varCornerRadius,
+      --TextBoxStyle = "NoBackground",
+    }
+  
+    --Update Config Button
+    layout["Update Config"] = {
+      Style = "Button",
+      ButtonStyle = "Momentary",
+      Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varPadding + varHeaderOffset},
+      Size = {varW - (varPadding * 4),varH - (varHeaderOffset + (varPadding * 2))},
+      HTextAlign = "Center",
+      CornerRadius = varCornerRadius,
+      --TextBoxStyle = "NoBackground",
+    }
+  
+    local tblScheduleDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+    --Update Schedule Days Buttons
+    for i = 1,7 do 
+      layout["Update Schedule Days "..i] = {
+        Style = "Button",
+        ButtonStyle = "Momentary",
+        Position = {varXi + varSpacing + varW + (varPadding * 2) + (varWDays*(i-1)) + (varPadding*(i-1)) ,varYi + varHeaderOffset + (varSpacing + varH) + varPadding },
+        Size = {varWDays,varHDays},
+        HTextAlign = "Center",
+        CornerRadius = varCornerRadius,
+        Legend = tblScheduleDays[i]
+        --TextBoxStyle = "NoBackground",
+      }
+    end
+  
+  elseif CurrentPage == "Setup" then
+    -- TBD
+  end
+  return layout, graphics
+end
+
+-- Optional function to define components used within the plugin
+function GetComponents(props)
+  local components = {}
+  -- table.insert(components,{
+  --   Name = "main_mixer",
+  --   Type = "mixer",
+  --   Properties =   
+  --   {
+  --     ["n_inputs"] = 8,
+  --     ["n_outputs"] = 1,
+  --   }
+  -- })
+  return components
+end
+
+-- Optional function to define pins on the plugin that are not connected to a Control
+function GetPins(props)
+  local pins = {}
+  -- table.insert(pins,{
+  --   Name = "Audio Output",
+  --   Direction = "output",
+  -- })
+  
+  -- table.insert(pins,{
+  --   Name = "Serial Port",
+  --   Direction = "input", -- input for serial ports, output for serial server ports
+  --   Domain = "serial"
+  -- })
+  return pins
+end
+
+-- Optional function to define wiring of components used within the plugin
+function GetWiring(props)
+  local wiring = {}
+  -- table.insert( wiring, { "main_mixer Output 1","Audio Output" } )
+  return wiring
+end
+
+--Start event based logic
+if Controls then
+  Controls.SendButton.EventHandler = function()
+    print("Hello, World!")
+  end
+end
