@@ -3,7 +3,7 @@ if CurrentPage == "Devices" then
   local varXi = 21 --initial x position
   local varYi = 12 --initial y position
   local varSpacing = 20 --element spacing variable
-  local tblFillColor = {200,200,200} --groupbox fill color
+  local tblFillColor = {0, 0, 0} --groupbox fill color
   local varW = 550 --groupbox initial width
   local varH = 125 --groupbox initial height
   local varPadding = 12 --padding variable
@@ -115,7 +115,8 @@ if CurrentPage == "Devices" then
       Size = {varWDays,varHDays},
       HTextAlign = "Center",
       CornerRadius = varCornerRadius,
-      Legend = tblScheduleDays[i]
+      Legend = tblScheduleDays[i],
+      Color = {159, 247, 162},
       --TextBoxStyle = "NoBackground",
     }
   end

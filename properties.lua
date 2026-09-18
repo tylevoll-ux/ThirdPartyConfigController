@@ -9,5 +9,7 @@ table.insert(props, {
   Name = "JSON File Name",
   Type = "string",
   Value = "A String",
+  Comment = "Name of JSON file on the Core",
 })
+
 

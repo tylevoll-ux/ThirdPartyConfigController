@@ -4,7 +4,7 @@
 -- Updated April 2026
 
 -- Information block for the plugin
-BuildVersion = "0.0.0.68" -- updated by the compiler
+BuildVersion = "0.0.0.76" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
@@ -16,12 +16,12 @@ PluginInfo = {
 
 -- Define the color of the plugin object in the design
 function GetColor(props)
-  return { 102, 102, 102 }
+  return { 0, 136, 255 }
 end
 
 -- The name that will initially display when dragged into a design
 function GetPrettyName(props)
-  return PluginInfo.Name.."
+  return PluginInfo.Name
 end
 
 -- Define User configurable Properties of the plugin
@@ -126,7 +126,7 @@ function GetControlLayout(props)
     local varXi = 21 --initial x position
     local varYi = 12 --initial y position
     local varSpacing = 20 --element spacing variable
-    local tblFillColor = {200,200,200} --groupbox fill color
+    local tblFillColor = {0, 0, 0} --groupbox fill color
     local varW = 550 --groupbox initial width
     local varH = 125 --groupbox initial height
     local varPadding = 12 --padding variable
@@ -238,7 +238,8 @@ function GetControlLayout(props)
         Size = {varWDays,varHDays},
         HTextAlign = "Center",
         CornerRadius = varCornerRadius,
-        Legend = tblScheduleDays[i]
+        Legend = tblScheduleDays[i],
+        Color = {159, 247, 162},
         --TextBoxStyle = "NoBackground",
       }
     end

@@ -8,12 +8,12 @@
 
 -- Define the color of the plugin object in the design
 function GetColor(props)
-  return { 102, 102, 102 }
+  return { 0, 136, 255 }
 end
 
 -- The name that will initially display when dragged into a design
 function GetPrettyName(props)
-  return PluginInfo.Name.."
+  return PluginInfo.Name
 end
 
 -- Define User configurable Properties of the plugin
