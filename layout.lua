@@ -3,7 +3,7 @@ if CurrentPage == "Devices" then
   local varXi = 21 --initial x position
   local varYi = 12 --initial y position
   local varSpacing = 20 --element spacing variable
-  local tblFillColor = {0, 0, 0} --groupbox fill color
+  local tblFillColor = {200, 200, 200} --groupbox fill color
   local varW = 550 --groupbox initial width
   local varH = 125 --groupbox initial height
   local varPadding = 12 --padding variable
@@ -12,6 +12,15 @@ if CurrentPage == "Devices" then
   local varWDays = 61 --width for schedule days buttons
   local varHDays = 32 --height for schedule days buttons
 
+
+  --Logo
+  Logo = "--[[ #encode "TVPluginsLogo.jpg" ]]"
+  table.insert(graphics,{
+    Type = "Image",
+    Image = Logo,
+    Position = {varXi, varYi + ((varSpacing + varH) * 2)  },
+    Size = {varW,varH},
+  })
   --Classroom Name Groupbox
   table.insert(graphics,{
     Type = "GroupBox",
@@ -40,6 +49,7 @@ if CurrentPage == "Devices" then
   table.insert(graphics,{
     Type = "Label",
     Text = "Plugin is compatible with any other Device Plugins that use QSYS SDK Reserved Control Names for: IPAddress, Username, Password",
+    --Color = {255,255,255},
     StrokeWidth = 1,
     Position = {varXi + varPadding,varYi + varSpacing + varH + varHeaderOffset + varPadding},
     Size = {varW - (varPadding * 2),varH - (varHeaderOffset + (varPadding * 2))},

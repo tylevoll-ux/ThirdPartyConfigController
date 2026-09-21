@@ -14,7 +14,25 @@ varjsonfile = Properties["JSON File Name"].Value
 varAutomaticTime = Properties["Automatic Updates Time"].Value
 --------------END OF PLUGIN PROPERTIES-----------
 
+--------------DEBUG SETUP---------
+DebugTx, DebugRx, DebugFunction = false, false, false
+  DebugPrint = Properties["Debug Print"].Value
+  if DebugPrint == "Tx/Rx" then
+    DebugTx, DebugRx = true, true
+  elseif DebugPrint == "Tx" then
+    DebugTx = true
+  elseif DebugPrint == "Rx" then
+    DebugRx = true
+  elseif DebugPrint == "Function Calls" then
+    DebugFunction = true
+  elseif DebugPrint == "All" then
+    DebugTx, DebugRx, DebugFunction = true, true, true
+  end
+--------------END DEBUG SETUP-----------
+
+
 funcGetComponents = function()
+  if DebugFunction then print("funcGetComponents: called") end
   for key, value in pairs(ComponentsTbl) do 
     print(value.Name, value.Type)
     --If the type of component is a plugin, then add the component to the PluginModules table
@@ -33,6 +51,7 @@ iv = "1234567890123456"
 
 --Function for reading the plaintext JSON file initially dropped onto the processor
 funcReadPlainTextConfig = function()
+  if DebugFunction then print("funcReadPlainTextConfig: called") end
 --Open the file if it exists, if not print an error
   local file, err = io.open("media/Config/"..varjsonfile..".json", "rb")
   if not file then
@@ -104,6 +123,7 @@ funcReadPlainTextConfig = function()
 end
 
 funcReadEncryptedConfig = function()
+  if DebugFunction then print("funcReadEncryptedConfig: called") end
   local success, file, err = pcall(io.open, "media/Config/"..varjsonfile.."Encrypted.txt", "r")
   --file = io.open("media/Config/QSYSConfigEncrypted.txt", "wb")
   if success and file then 
@@ -200,6 +220,7 @@ Controls.EnableScheduleDays.EventHandler = function(ctl)
 end  
 ----------------------------------------------------
 function funcInit()
+  if DebugFunction then print("funcInit: called") end
   if Controls.Encryption.Boolean == true then
     funcReadEncryptedConfig()
   else
