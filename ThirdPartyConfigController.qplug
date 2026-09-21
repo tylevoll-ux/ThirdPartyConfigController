@@ -1,10 +1,10 @@
--- Basic Framework Plugin
--- by QSC
--- October 2020
--- Updated April 2026
+-- Third Party Plugin Configurator
+-- by Tyler Vollett
+-- September 2026
+-- Updated September 2026
 
 -- Information block for the plugin
-BuildVersion = "1.0.6.0" -- updated by the compiler
+BuildVersion = "1.0.7.0" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
@@ -66,7 +66,7 @@ end
 -- end
 
 -- Optional function used if plugin has multiple pages
-PageNames = { "Devices", "Setup" }  --List the pages within the plugin
+PageNames = { "Config" }  --List the pages within the plugin
 function GetPages(props)
   local pages = {}
   for _,value in ipairs(PageNames) do
@@ -139,7 +139,7 @@ function GetControlLayout(props)
   local layout = {}
   local graphics = {}
   local CurrentPage = PageNames[props["page_index"].Value]
-  if CurrentPage == "Devices" then
+  if CurrentPage == "Config" then
     local varXi = 21 --initial x position
     local varYi = 12 --initial y position
     local varSpacing = 20 --element spacing variable

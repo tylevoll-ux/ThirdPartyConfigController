@@ -1,5 +1,5 @@
 local CurrentPage = PageNames[props["page_index"].Value]
-if CurrentPage == "Devices" then
+if CurrentPage == "Config" then
   local varXi = 21 --initial x position
   local varYi = 12 --initial y position
   local varSpacing = 20 --element spacing variable

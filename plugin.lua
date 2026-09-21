@@ -1,7 +1,7 @@
--- Basic Framework Plugin
--- by QSC
--- October 2020
--- Updated April 2026
+-- Third Party Plugin Configurator
+-- by Tyler Vollett
+-- September 2026
+-- Updated September 2026
 
 -- Information block for the plugin
 --[[ #include "info.lua" ]]
@@ -36,7 +36,7 @@ end
 -- end
 
 -- Optional function used if plugin has multiple pages
-PageNames = { "Devices", "Setup" }  --List the pages within the plugin
+PageNames = { "Config" }  --List the pages within the plugin
 function GetPages(props)
   local pages = {}
   --[[ #include "pages.lua" ]]
