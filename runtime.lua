@@ -82,7 +82,7 @@ funcReadPlainTextConfig = function()
   local data = file:read("*all")
   --close the file when finished
   file:close()
-  if Controls.Encryption.Boolean == true then
+  --if Controls.Encryption.Boolean == true then
     --encrypting the data using the AESkey and iv defined above
     local success, encrypted, encErr = pcall(Crypto.Encrypt, Crypto.Cipher.AES_256_CBC, AESkey, iv, data)
     --if the encryption fails print an error
@@ -91,19 +91,19 @@ funcReadPlainTextConfig = function()
       return
     end
   --Save the encrypted data to the processor in the destination defined below
-    local outFile, outErr = io.open("media/Config/"..varjsonfile..".txt", "wb")
+    local outFile, outErr = io.open("media/Config/"..varjsonfile.."Encrypted.txt", "wb")
     if outFile then
       outFile:write(Crypto.Base64Encode(encrypted))
       outFile:close()
     else
       print("failed to create file:", outErr)
     end
-  else
+  --end
     tblConfig, err = rapidjson.decode(data)
       if err then
         print(err)
       elseif tblConfig ~= nil then 
-        print("JSON decoded successfully:")
+        print("JSON decoded successfully")
         funcSetState("OK", "JSON Decoded Successfully")
         for key, value in pairs(tblConfig) do  
           if type(value) == "table" then 
@@ -138,8 +138,7 @@ funcReadPlainTextConfig = function()
       end  
     --[[else 
       print("Error opening file")
-    end --]]
-  end  
+    end --]] 
 end
 
 funcReadEncryptedConfig = function()
