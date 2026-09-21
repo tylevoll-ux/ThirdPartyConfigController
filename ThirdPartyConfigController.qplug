@@ -4,7 +4,7 @@
 -- Updated April 2026
 
 -- Information block for the plugin
-BuildVersion = "0.0.0.168" -- updated by the compiler
+BuildVersion = "1.0.0.0" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
