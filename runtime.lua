@@ -104,7 +104,7 @@ funcReadPlainTextConfig = function()
 end
 
 funcReadEncryptedConfig = function()
-  local success, file, err = pcall(io.open, "media/Config/"..varjsonfile..".txt", "r")
+  local success, file, err = pcall(io.open, "media/Config/"..varjsonfile.."Encrypted.txt", "r")
   --file = io.open("media/Config/QSYSConfigEncrypted.txt", "wb")
   if success and file then 
     if file ~= nil then 
@@ -204,6 +204,9 @@ function funcInit()
     funcReadEncryptedConfig()
   else
     funcReadPlainTextConfig()
+  end  
+  if Controls.EnableScheduleDays.Boolean == true then
+    scheduleNextCheck()
   end  
 end
 

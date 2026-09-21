@@ -4,7 +4,7 @@
 -- Updated April 2026
 
 -- Information block for the plugin
-BuildVersion = "0.0.0.132" -- updated by the compiler
+BuildVersion = "0.0.0.135" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
@@ -28,13 +28,6 @@ end
 function GetProperties()
   local props = {}
   table.insert(props, {
-    Name = "Debug Print",
-    Type = "enum",
-    Choices = {"None", "Tx/Rx", "Tx", "Rx", "Function Calls", "All"},
-    Value = "None"
-  })
-  
-  table.insert(props, {
     Name = "JSON File Name",
     Type = "string",
     Value = "A String",
@@ -46,6 +39,13 @@ function GetProperties()
     Type = "enum",
     Choices = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"},
     Value = "None",
+  })
+  
+  table.insert(props, {
+    Name = "Debug Print",
+    Type = "enum",
+    Choices = {"None", "Tx/Rx", "Tx", "Rx", "Function Calls", "All"},
+    Value = "None"
   })
   return props
 end
@@ -429,7 +429,7 @@ if Controls then
   end
   
   funcReadEncryptedConfig = function()
-    local success, file, err = pcall(io.open, "media/Config/"..varjsonfile..".txt", "r")
+    local success, file, err = pcall(io.open, "media/Config/"..varjsonfile.."Encrypted.txt", "r")
     --file = io.open("media/Config/QSYSConfigEncrypted.txt", "wb")
     if success and file then 
       if file ~= nil then 
@@ -529,6 +529,9 @@ if Controls then
       funcReadEncryptedConfig()
     else
       funcReadPlainTextConfig()
+    end  
+    if Controls.EnableScheduleDays.Boolean == true then
+      scheduleNextCheck()
     end  
   end
   
