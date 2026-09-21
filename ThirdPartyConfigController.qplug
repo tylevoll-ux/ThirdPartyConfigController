@@ -4,7 +4,7 @@
 -- Updated April 2026
 
 -- Information block for the plugin
-BuildVersion = "1.0.5.0" -- updated by the compiler
+BuildVersion = "1.0.6.0" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
@@ -268,7 +268,7 @@ function GetControlLayout(props)
     --Update Schedule Days Buttons
     for i = 1,7 do 
       layout["UpdateScheduleDays "..i] = {
-        PrettyName = "Automatic Updates~Day Of The Week",
+        PrettyName = "Automatic Updates~Day Of The Week"..i,
         Style = "Button",
         ButtonStyle = "Toggle",
         Position = {varXi + varSpacing + varW + (varPadding * 2) + (varWDays*(i-1)) + (varPadding*(i-1)) ,varYi + varHeaderOffset + (varSpacing + varH) + varPadding },

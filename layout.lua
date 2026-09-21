@@ -128,7 +128,7 @@ if CurrentPage == "Devices" then
   --Update Schedule Days Buttons
   for i = 1,7 do 
     layout["UpdateScheduleDays "..i] = {
-      PrettyName = "Automatic Updates~Day Of The Week",
+      PrettyName = "Automatic Updates~Day Of The Week"..i,
       Style = "Button",
       ButtonStyle = "Toggle",
       Position = {varXi + varSpacing + varW + (varPadding * 2) + (varWDays*(i-1)) + (varPadding*(i-1)) ,varYi + varHeaderOffset + (varSpacing + varH) + varPadding },

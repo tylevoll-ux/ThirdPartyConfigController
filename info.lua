@@ -1,4 +1,4 @@
-BuildVersion = "1.0.5.0" -- updated by the compiler
+BuildVersion = "1.0.6.0" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
