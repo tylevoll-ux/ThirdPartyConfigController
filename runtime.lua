@@ -34,7 +34,6 @@ DebugTx, DebugRx, DebugFunction = false, false, false
 funcGetComponents = function()
   if DebugFunction then print("funcGetComponents: called") end
   for key, value in pairs(ComponentsTbl) do 
-    print(value.Name, value.Type)
     --If the type of component is a plugin, then add the component to the PluginModules table
     if value.Type == "plugin" then 
       PluginModules[value.Name] = Component.New(value.Name)
@@ -62,8 +61,6 @@ funcReadPlainTextConfig = function()
   local data = file:read("*all")
   --close the file when finished
   file:close()
-  --printing for easier debugging
-  print(data)
   if Controls.Encryption.Boolean == true then
     --encrypting the data using the AESkey and iv defined above
     local success, encrypted, encErr = pcall(Crypto.Encrypt, Crypto.Cipher.AES_256_CBC, AESkey, iv, data)
@@ -131,8 +128,6 @@ funcReadEncryptedConfig = function()
       content = file:read("*a")
       basecontent = Crypto.Base64Decode(content)
       decrypt = Crypto.Decrypt(Crypto.Cipher.AES_256_CBC, AESkey, iv, basecontent)
-      --print(content)
-      print(decrypt)
       file:close()
 
       tblConfig, err = rapidjson.decode(decrypt)
