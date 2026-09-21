@@ -1,0 +1,33 @@
+{
+    "Classroom": "Magic Classroom",
+    "Racklinks": {
+        "Racklink-A1": {
+            "IpAddress": "1.1.1.1",
+            "Username": "test",
+            "Password": "test"
+        }
+    },
+    },
+    "NetgearSwitches": {
+        "NetgearAVOIP1": {
+            "IpAddress": "192.168.0.200",
+            "Username": "test",
+            "Password": "test"
+        },
+        "NetgearDante1": {
+            "IpAddress": "192.168.0.200",
+            "Username": "test",
+            "Password": "test"
+        }
+    },
+    "Projectors": {
+        "AudL": {
+            "IpAddress": "this.is.a.test",
+            "Password": "fake1234"
+        },
+        "AudR": {
+            "IpAddress": "this.will.not.work,",
+            "Password": "fake4321"
+        }
+    }
+}
