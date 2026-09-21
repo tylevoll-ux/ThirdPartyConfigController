@@ -1,4 +1,13 @@
 table.insert(ctrls, {
+  Name = "Status", --Reserved name
+  ControlType = "Indicator",
+  IndicatorType = "Status",
+  Count = 1,
+  UserPin = true, --determines if the pin exposure is user configurable
+  PinStyle = "Both", --"Input" "Output" "Both" or "None"
+})
+
+table.insert(ctrls, {
   Name = "ClassroomName",
   ControlType = "Text",
   Count = 1,

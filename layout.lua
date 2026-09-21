@@ -11,7 +11,7 @@ if CurrentPage == "Devices" then
   local varCornerRadius = 8 --corner radius 
   local varWDays = 61 --width for schedule days buttons
   local varHDays = 32 --height for schedule days buttons
-
+  local varBtnColour = {160, 209, 247}
 
   --Logo
   Logo = "--[[ #encode "TVPluginsLogo.jpg" ]]"
@@ -19,8 +19,15 @@ if CurrentPage == "Devices" then
     Type = "Image",
     Image = Logo,
     Position = {varXi, varYi + ((varSpacing + varH) * 2)  },
-    Size = {varW,varH},
+    Size = {varW/2,varH},
   })
+  --Status
+  layout["Status"] = {
+    PrettyName = "Status",
+    Style = "Text",
+    Position = {varXi + (varW / 2) + varSpacing ,varYi + ((varSpacing + varH) * 2)},
+    Size = {(varW/2) - varSpacing,varH},
+  }
   --Classroom Name Groupbox
   table.insert(graphics,{
     Type = "GroupBox",
@@ -105,6 +112,7 @@ if CurrentPage == "Devices" then
 
   --Update Config Button
   layout["UpdateConfig"] = {
+    PrettyName = "Config~Manual Update",
     Style = "Button",
     ButtonStyle = "Momentary",
     Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varPadding + varHeaderOffset},
@@ -112,7 +120,7 @@ if CurrentPage == "Devices" then
     HTextAlign = "Center",
     CornerRadius = varCornerRadius,
     Legend = "Manual Update",
-    Color = {159, 247, 162},
+    Color = varBtnColour,
     --TextBoxStyle = "NoBackground",
   }
 
@@ -120,6 +128,7 @@ if CurrentPage == "Devices" then
   --Update Schedule Days Buttons
   for i = 1,7 do 
     layout["UpdateScheduleDays "..i] = {
+      PrettyName = "Automatic Updates~Day Of The Week",
       Style = "Button",
       ButtonStyle = "Toggle",
       Position = {varXi + varSpacing + varW + (varPadding * 2) + (varWDays*(i-1)) + (varPadding*(i-1)) ,varYi + varHeaderOffset + (varSpacing + varH) + varPadding },
@@ -127,13 +136,14 @@ if CurrentPage == "Devices" then
       HTextAlign = "Center",
       CornerRadius = varCornerRadius,
       Legend = tblScheduleDays[i],
-      Color = {159, 247, 162},
+      Color = varBtnColour,
       --TextBoxStyle = "NoBackground",
     }
   end
 
   --Enable Schedule Button
   layout["EnableScheduleDays"] = {
+    PrettyName = "Automatic Updates~Enable",
     Style = "Button",
     ButtonStyle = "Toggle",
     Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varHeaderOffset + (varSpacing + varH) + varPadding + varHDays + (varSpacing/2)},
@@ -141,11 +151,12 @@ if CurrentPage == "Devices" then
     HTextAlign = "Center",
     CornerRadius = varCornerRadius,
     Legend = "Enable Automatic Scheduling",
-    Color = {159, 247, 162},
+    Color = varBtnColour,
     --TextBoxStyle = "NoBackground",
   }
 
   layout["Encryption"] = {
+    PrettyName = "Encryption~Enable",
     Style = "Button",
     ButtonStyle = "Toggle",
     Position = {varXi + varSpacing + varW + (varPadding * 2),(varYi + varHeaderOffset + varPadding + varH)*2},
@@ -153,7 +164,7 @@ if CurrentPage == "Devices" then
     HTextAlign = "Center",
     CornerRadius = varCornerRadius,
     Legend = "Enable Encryption",
-    Color = {159, 247, 162},
+    Color = varBtnColour,
     --TextBoxStyle = "NoBackground",
   }
 

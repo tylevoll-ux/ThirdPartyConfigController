@@ -7,6 +7,13 @@ rapidjson = require("rapidjson")
 tblConfig = {}
 ComponentsTbl = Component.GetComponents()
 PluginModules = {}
+tblState = {}
+tblState["OK"] = 0
+tblState["COMPROMISED"] = 1
+tblState["FAULT"] = 2
+tblState["NOTPRESENT"] = 3
+tblState["MISSING"] = 4
+tblState["INITIALIZING"] = 5
 --------------END OF TABLE DECLARATIONS-----------
 
 --------------PLUGIN PROPERTIES---------
@@ -29,7 +36,21 @@ DebugTx, DebugRx, DebugFunction = false, false, false
     DebugTx, DebugRx, DebugFunction = true, true, true
   end
 --------------END DEBUG SETUP-----------
+function funcSetState(argState, argMessage)
+  --Principle: DebugFunction is for tracking logic
+  if DebugFunction then print("funcSetState: called") end
+  if tblState[argState] == nil then 
+    print("funcSetState: Unknown state encountered.")
+    --Principle: Errors should always be printed
 
+    return
+  end 
+  if argMessage == nil then 
+    argMessage = ""
+  end 
+  Controls.Status.Value = tblState[argState]
+  Controls.Status.String = argMessage
+end 
 
 funcGetComponents = function()
   if DebugFunction then print("funcGetComponents: called") end
@@ -79,10 +100,11 @@ funcReadPlainTextConfig = function()
     end
   else
     tblConfig, err = rapidjson.decode(data)
-      print(err)
-
-      if tblConfig ~= nil then 
+      if err then
+        print(err)
+      elseif tblConfig ~= nil then 
         print("JSON decoded successfully:")
+        funcSetState("OK", "JSON Decoded Successfully")
         for key, value in pairs(tblConfig) do  
           if type(value) == "table" then 
             for k1, v1 in pairs(value) do  
@@ -112,6 +134,7 @@ funcReadPlainTextConfig = function()
         end
       else
         print("Error decoding JSON")
+        funcSetState("FAULT", "Error Decoding JSON File")
       end  
     --[[else 
       print("Error opening file")
@@ -131,10 +154,12 @@ funcReadEncryptedConfig = function()
       file:close()
 
       tblConfig, err = rapidjson.decode(decrypt)
-      print(err)
-
-      if tblConfig ~= nil then 
-        print("JSON decoded successfully:")
+      if err then
+        print(err)
+        funcSetState("FAULT", err)
+      elseif tblConfig ~= nil then 
+        print("JSON decoded successfully")
+        funcSetState("OK", "JSON Decoded Successfully")
         for key, value in pairs(tblConfig) do  
           if type(value) == "table" then 
             for k1, v1 in pairs(value) do  
@@ -165,9 +190,11 @@ funcReadEncryptedConfig = function()
     
       else
         print("Error decoding JSON")
+        funcSetState("FAULT", "Error Decoding JSON")
       end  
     else 
       print("Error opening file")
+      funcSetState("FAULT", "Error Opening File")
     end 
  end 
 end
@@ -216,6 +243,7 @@ end
 ----------------------------------------------------
 function funcInit()
   if DebugFunction then print("funcInit: called") end
+  funcSetState("INITIALIZING")
   if Controls.Encryption.Boolean == true then
     funcReadEncryptedConfig()
   else
