@@ -4,7 +4,7 @@
 -- Updated April 2026
 
 -- Information block for the plugin
-BuildVersion = "0.0.0.76" -- updated by the compiler
+BuildVersion = "0.0.0.132" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
@@ -38,8 +38,15 @@ function GetProperties()
     Name = "JSON File Name",
     Type = "string",
     Value = "A String",
+    Comment = "Name of JSON file on the Core",
   })
   
+  table.insert(props, {
+    Name = "Automatic Updates Time",
+    Type = "enum",
+    Choices = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"},
+    Value = "None",
+  })
   return props
 end
 
@@ -71,7 +78,7 @@ end
 function GetControls(props)
   local ctrls = {}
   table.insert(ctrls, {
-    Name = "Classroom Name",
+    Name = "ClassroomName",
     ControlType = "Text",
     Count = 1,
     UserPin = true,
@@ -79,7 +86,7 @@ function GetControls(props)
   })
   
   table.insert(ctrls, {
-    Name = "Update Config",
+    Name = "UpdateConfig",
     ControlType = "Button",
     ButtonType = "Momentary",
     Count = 1,
@@ -88,7 +95,7 @@ function GetControls(props)
   })
    
   table.insert(ctrls, {
-    Name = "Update Schedule Days",
+    Name = "UpdateScheduleDays",
     ControlType = "Button",
     ButtonType = "Toggle",
     Count = 7,
@@ -97,7 +104,7 @@ function GetControls(props)
   })
   
   table.insert(ctrls, {
-    Name = "Enable Schedule Days",
+    Name = "EnableScheduleDays",
     ControlType = "Button",
     ButtonType = "Toggle",
     Count = 1,
@@ -207,7 +214,7 @@ function GetControlLayout(props)
     })
   
     --Classroom Name Control Layout
-    layout["Classroom Name"] = {
+    layout["ClassroomName"] = {
       Style = "Text",
       Position = {varXi + varPadding,varYi + varPadding + varHeaderOffset},
       Size = {varW - (varPadding * 2),varH - (varHeaderOffset + (varPadding * 2))},
@@ -217,7 +224,7 @@ function GetControlLayout(props)
     }
   
     --Update Config Button
-    layout["Update Config"] = {
+    layout["UpdateConfig"] = {
       Style = "Button",
       ButtonStyle = "Momentary",
       Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varPadding + varHeaderOffset},
@@ -225,13 +232,14 @@ function GetControlLayout(props)
       HTextAlign = "Center",
       CornerRadius = varCornerRadius,
       Legend = "Manual Update",
+      Color = {159, 247, 162},
       --TextBoxStyle = "NoBackground",
     }
   
     local tblScheduleDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
     --Update Schedule Days Buttons
     for i = 1,7 do 
-      layout["Update Schedule Days "..i] = {
+      layout["UpdateScheduleDays "..i] = {
         Style = "Button",
         ButtonStyle = "Toggle",
         Position = {varXi + varSpacing + varW + (varPadding * 2) + (varWDays*(i-1)) + (varPadding*(i-1)) ,varYi + varHeaderOffset + (varSpacing + varH) + varPadding },
@@ -245,7 +253,7 @@ function GetControlLayout(props)
     end
   
     --Enable Schedule Button
-    layout["Enable Schedule Days"] = {
+    layout["EnableScheduleDays"] = {
       Style = "Button",
       ButtonStyle = "Toggle",
       Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varHeaderOffset + (varSpacing + varH) + varPadding + varHDays + (varSpacing/2)},
@@ -253,6 +261,7 @@ function GetControlLayout(props)
       HTextAlign = "Center",
       CornerRadius = varCornerRadius,
       Legend = "Enable Automatic Scheduling",
+      Color = {159, 247, 162},
       --TextBoxStyle = "NoBackground",
     }
   
@@ -264,6 +273,7 @@ function GetControlLayout(props)
       HTextAlign = "Center",
       CornerRadius = varCornerRadius,
       Legend = "Enable Encryption",
+      Color = {159, 247, 162},
       --TextBoxStyle = "NoBackground",
     }
   
@@ -313,7 +323,214 @@ end
 
 --Start event based logic
 if Controls then
-  Controls.SendButton.EventHandler = function()
-    print("Hello, World!")
+  
+  --------------Import Modules----------------------
+  rapidjson = require("rapidjson")
+  --------------------------------------------------
+  
+  --------------START OF TABLE DECLARATIONS---------
+  tblConfig = {}
+  ComponentsTbl = Component.GetComponents()
+  PluginModules = {}
+  --------------END OF TABLE DECLARATIONS-----------
+  
+  --------------PLUGIN PROPERTIES---------
+  varjsonfile = Properties["JSON File Name"].Value
+  varAutomaticTime = Properties["Automatic Updates Time"].Value
+  --------------END OF PLUGIN PROPERTIES-----------
+  
+  funcGetComponents = function()
+    for key, value in pairs(ComponentsTbl) do 
+      print(value.Name, value.Type)
+      --If the type of component is a plugin, then add the component to the PluginModules table
+      if value.Type == "plugin" then 
+        PluginModules[value.Name] = Component.New(value.Name)
+      end 
+    end 
+  end 
+  
+  --Run at startup
+  funcGetComponents()
+  
+  --Variable assignment for Encryption
+  AESkey = "12345678901234567890123456789012"
+  iv = "1234567890123456"
+  
+  --Function for reading the plaintext JSON file initially dropped onto the processor
+  funcReadPlainTextConfig = function()
+  --Open the file if it exists, if not print an error
+    local file, err = io.open("media/Config/"..varjsonfile..".json", "rb")
+    if not file then
+      print("Error opening file:", err)
+      return
+    end
+  --Read the entire file and store the data in a new variable called data
+    local data = file:read("*all")
+    --close the file when finished
+    file:close()
+    --printing for easier debugging
+    print(data)
+    if Controls.Encryption.Boolean == true then
+      --encrypting the data using the AESkey and iv defined above
+      local success, encrypted, encErr = pcall(Crypto.Encrypt, Crypto.Cipher.AES_256_CBC, AESkey, iv, data)
+      --if the encryption fails print an error
+      if not success then
+        print("Encryption Error:", encrypted, encErr)
+        return
+      end
+    --Save the encrypted data to the processor in the destination defined below
+      local outFile, outErr = io.open("media/Config/"..varjsonfile..".txt", "wb")
+      if outFile then
+        outFile:write(Crypto.Base64Encode(encrypted))
+        outFile:close()
+      else
+        print("failed to create file:", outErr)
+      end
+    else
+      tblConfig, err = rapidjson.decode(data)
+        print(err)
+  
+        if tblConfig ~= nil then 
+          print("JSON decoded successfully:")
+          for key, value in pairs(tblConfig) do  
+            if type(value) == "table" then 
+              for k1, v1 in pairs(value) do  
+                for pluginName, pluginComp in pairs(PluginModules) do
+                  if string.find(k1, pluginName, 1, true) then 
+                    for k2, v2 in pairs(v1) do 
+                      if k2 == "IpAddress" then 
+                        pluginComp['IPAddress'].String = v2
+                      elseif k2 == "Username" then 
+                        pluginComp['Username'].String = v2
+                      elseif k2 == "Password" then 
+                        pluginComp['Password'].String = v2
+                      end 
+                    end
+                  end
+                end  
+              end 
+            elseif key == "Classroom" then 
+              Controls.ClassroomName.String = value 
+            --[[elseif key == "NumProjectors" then 
+              if value == "Two" then 
+                Controls.txt_NumberProjectors.String = "Two"
+              elseif value == "One" then 
+                Controls.txt_NumberProjectors.String = "One"
+              end --]]
+            end
+          end
+        else
+          print("Error decoding JSON")
+        end  
+      --[[else 
+        print("Error opening file")
+      end --]]
+    end  
   end
+  
+  funcReadEncryptedConfig = function()
+    local success, file, err = pcall(io.open, "media/Config/"..varjsonfile..".txt", "r")
+    --file = io.open("media/Config/QSYSConfigEncrypted.txt", "wb")
+    if success and file then 
+      if file ~= nil then 
+        content = file:read("*a")
+        basecontent = Crypto.Base64Decode(content)
+        decrypt = Crypto.Decrypt(Crypto.Cipher.AES_256_CBC, AESkey, iv, basecontent)
+        --print(content)
+        print(decrypt)
+        file:close()
+  
+        tblConfig, err = rapidjson.decode(decrypt)
+        print(err)
+  
+        if tblConfig ~= nil then 
+          print("JSON decoded successfully:")
+          for key, value in pairs(tblConfig) do  
+            if type(value) == "table" then 
+              for k1, v1 in pairs(value) do  
+                for pluginName, pluginComp in pairs(PluginModules) do
+                  if string.find(k1, pluginName, 1, true) then 
+                    for k2, v2 in pairs(v1) do 
+                      if k2 == "IpAddress" then 
+                        pluginComp['IPAddress'].String = v2
+                      elseif k2 == "Username" then 
+                        pluginComp['Username'].String = v2
+                      elseif k2 == "Password" then 
+                        pluginComp['Password'].String = v2
+                      end 
+                    end
+                  end
+                end  
+              end 
+            elseif key == "Classroom" then 
+              Controls.ClassroomName.String = value 
+            --[[elseif key == "NumProjectors" then 
+              if value == "Two" then 
+                Controls.txt_NumberProjectors.String = "Two"
+              elseif value == "One" then 
+                Controls.txt_NumberProjectors.String = "One"
+              end --]]
+            end
+          end
+      
+        else
+          print("Error decoding JSON")
+        end  
+      else 
+        print("Error opening file")
+      end 
+   end 
+  end
+  
+  Controls.UpdateConfig.EventHandler = function(ctl)
+    if ctl.Boolean == true then 
+      if Controls.Encryption.Boolean == true then
+        funcReadEncryptedConfig()
+      else 
+        funcReadPlainTextConfig()
+      end
+    end 
+  end 
+  
+  
+  --Reload Config At midnight to capture any changes--
+  function scheduleNextCheck()
+      local day = os.date("%A")
+      local hour = tonumber(os.date("%H"))
+      local min = tonumber(os.date("%M"))
+      local daystbl = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+  
+      for k,v in pairs(daystbl) do  
+        if string.find(v, day) then
+          varUpdateDay = k
+        end  
+      end  
+      --if hour == tonumber(varAutomaticTime) then
+        if Controls.UpdateScheduleDays[varUpdateDay].Boolean == true then
+          if hour == tonumber(varAutomaticTime) then
+            if Controls.Encryption.Boolean == true then
+              funcReadEncryptedConfig()
+            else 
+              funcReadPlainTextConfig()
+            end  
+          end
+      end
+      Timer.CallAfter(scheduleNextCheck, 60)
+  end
+  
+  Controls.EnableScheduleDays.EventHandler = function(ctl)
+    if ctl.Boolean == true then
+      scheduleNextCheck()
+    end  
+  end  
+  ----------------------------------------------------
+  function funcInit()
+    if Controls.Encryption.Boolean == true then
+      funcReadEncryptedConfig()
+    else
+      funcReadPlainTextConfig()
+    end  
+  end
+  
+  funcInit()
 end

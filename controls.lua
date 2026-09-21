@@ -1,5 +1,5 @@
 table.insert(ctrls, {
-  Name = "Classroom Name",
+  Name = "ClassroomName",
   ControlType = "Text",
   Count = 1,
   UserPin = true,
@@ -7,7 +7,7 @@ table.insert(ctrls, {
 })
 
 table.insert(ctrls, {
-  Name = "Update Config",
+  Name = "UpdateConfig",
   ControlType = "Button",
   ButtonType = "Momentary",
   Count = 1,
@@ -16,7 +16,7 @@ table.insert(ctrls, {
 })
  
 table.insert(ctrls, {
-  Name = "Update Schedule Days",
+  Name = "UpdateScheduleDays",
   ControlType = "Button",
   ButtonType = "Toggle",
   Count = 7,
@@ -25,7 +25,7 @@ table.insert(ctrls, {
 })
 
 table.insert(ctrls, {
-  Name = "Enable Schedule Days",
+  Name = "EnableScheduleDays",
   ControlType = "Button",
   ButtonType = "Toggle",
   Count = 1,

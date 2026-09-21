@@ -84,7 +84,7 @@ if CurrentPage == "Devices" then
   })
 
   --Classroom Name Control Layout
-  layout["Classroom Name"] = {
+  layout["ClassroomName"] = {
     Style = "Text",
     Position = {varXi + varPadding,varYi + varPadding + varHeaderOffset},
     Size = {varW - (varPadding * 2),varH - (varHeaderOffset + (varPadding * 2))},
@@ -94,7 +94,7 @@ if CurrentPage == "Devices" then
   }
 
   --Update Config Button
-  layout["Update Config"] = {
+  layout["UpdateConfig"] = {
     Style = "Button",
     ButtonStyle = "Momentary",
     Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varPadding + varHeaderOffset},
@@ -102,13 +102,14 @@ if CurrentPage == "Devices" then
     HTextAlign = "Center",
     CornerRadius = varCornerRadius,
     Legend = "Manual Update",
+    Color = {159, 247, 162},
     --TextBoxStyle = "NoBackground",
   }
 
   local tblScheduleDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
   --Update Schedule Days Buttons
   for i = 1,7 do 
-    layout["Update Schedule Days "..i] = {
+    layout["UpdateScheduleDays "..i] = {
       Style = "Button",
       ButtonStyle = "Toggle",
       Position = {varXi + varSpacing + varW + (varPadding * 2) + (varWDays*(i-1)) + (varPadding*(i-1)) ,varYi + varHeaderOffset + (varSpacing + varH) + varPadding },
@@ -122,7 +123,7 @@ if CurrentPage == "Devices" then
   end
 
   --Enable Schedule Button
-  layout["Enable Schedule Days"] = {
+  layout["EnableScheduleDays"] = {
     Style = "Button",
     ButtonStyle = "Toggle",
     Position = {varXi + varSpacing + varW + (varPadding * 2),varYi + varHeaderOffset + (varSpacing + varH) + varPadding + varHDays + (varSpacing/2)},
@@ -130,6 +131,7 @@ if CurrentPage == "Devices" then
     HTextAlign = "Center",
     CornerRadius = varCornerRadius,
     Legend = "Enable Automatic Scheduling",
+    Color = {159, 247, 162},
     --TextBoxStyle = "NoBackground",
   }
 
@@ -141,6 +143,7 @@ if CurrentPage == "Devices" then
     HTextAlign = "Center",
     CornerRadius = varCornerRadius,
     Legend = "Enable Encryption",
+    Color = {159, 247, 162},
     --TextBoxStyle = "NoBackground",
   }
 
