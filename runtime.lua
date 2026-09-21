@@ -76,6 +76,7 @@ funcReadPlainTextConfig = function()
   local file, err = io.open("media/Config/"..varjsonfile..".json", "rb")
   if not file then
     print("Error opening file:", err)
+    funcSetState("FAULT", "Error Opening Unencrypted File")
     return
   end
 --Read the entire file and store the data in a new variable called data
@@ -193,7 +194,7 @@ funcReadEncryptedConfig = function()
       end  
     else 
       print("Error opening file")
-      funcSetState("FAULT", "Error Opening File")
+      funcSetState("FAULT", "Error Opening Encrypted File")
     end 
  end 
 end

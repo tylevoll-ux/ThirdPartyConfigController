@@ -4,7 +4,7 @@
 -- Updated April 2026
 
 -- Information block for the plugin
-BuildVersion = "1.0.3.0" -- updated by the compiler
+BuildVersion = "1.0.5.0" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
@@ -432,6 +432,7 @@ if Controls then
     local file, err = io.open("media/Config/"..varjsonfile..".json", "rb")
     if not file then
       print("Error opening file:", err)
+      funcSetState("FAULT", "Error Opening Unencrypted File")
       return
     end
   --Read the entire file and store the data in a new variable called data
@@ -549,7 +550,7 @@ if Controls then
         end  
       else 
         print("Error opening file")
-        funcSetState("FAULT", "Error Opening File")
+        funcSetState("FAULT", "Error Opening Encrypted File")
       end 
    end 
   end
