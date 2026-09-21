@@ -1,32 +1,23 @@
-# BasePlugin
+# Third Party Plugin Configurator
 
-This is a template plugin that you can download with some pre-written Lua code to get you started.
+This is a plugin that is designed to read a JSON file living on a control processor containing Username, Password, IPAddress information. This plugin is currently compatible with any QSYS plugin that utilizes the standard SDK naming of "Username", "Password", and "IPAddress" in its plugin. 
 
-## PluginCompile
+#JSON File
 
-This is a submodule built for VS Code. Please note it is not intended to be used for any other source code editors.
+JSON file currently needs to live on the processor in "media/Config/", however the file can be named whatever you would like and set in Designer via the Properties window. A Sample JSON file is included in this repository for testing, and/or modifying for your own use.
 
-The submodule will take the individual source Lua files in your local repo, compile them into a singular qplug file, and auto increment the desired octet of the BuildVersion.
-For first time builds, it will auto-generate an UUID for you plugin as well.
+#Plugin Names
 
-Make sure to map a keyboard shortcut by navigating to File>Preferences>Keyboard Shortcuts. Type in "Tasks" and assign the desired shortcut to the Tasks: Run Build Task command
+In order for the plugin to work for your Designer file ensure that the names you are entering in the JSON file match the plugin name in Designer (properties window).
 
-### Build Arguments
+#Encryption
 
-< ver_maj > : increments the first octet of BuildVersion to denote a major version change
+Encryption support is available and is enabled through the toggle button within the plugin. When enabled the JSON plain text file will be read from the processor and then encrypted and saved into the same directory as a .txt file. If you wish to delete the plaintext JSON file after this process, do so with caution as you will not be able to decrypt the information unless inside this plugin.
 
-< ver_min > : increments the second octet of BuildVersion to denote a minor version change
+#Automatic Updates
 
-< ver_fix > : increments the third octet of BuildVersion to denote a bugfix
-
-< ver_dev > : increments the fourth octet of BuildVersion to denote a new development version
-
-< CANCEL > : cancels the build process
-  
-Please note that the public version (PluginVersion) only displays first and second octet. The second octets are intended for developer use and version tracking.
+Automatic checks for updates is supported in this plugin. It is enabled through the use of individual day toggle buttons, as well as a time of day option located within the properties window for the plugin. Once enabled and meeting the conditions for the time of day and day of week settings the plugin will run checks currently every minute and pull any updated credentials into the designer file.
 
 ## Support
 
-If you have any questions or concerns with this template, please contact qsyscontrolfeedback@qsc.com
-
-Please note that QSC does not support plugins authored by third party developers or companies.
+If you have any questions or concerns with this plugin, contact me at tylevoll@gmail.com
