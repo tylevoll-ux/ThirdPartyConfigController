@@ -1,6 +1,6 @@
-BuildVersion = "1.1.0.0" -- updated by the compiler
+BuildVersion = "1.1.1.0" -- updated by the compiler
 PluginInfo = {
-  Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
+  Name = "TVPlugins~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
   Id = "66f7acb0-4d4d-4f88-9597-e6516d394d8f",
   Author = "Tyler Vollett",
