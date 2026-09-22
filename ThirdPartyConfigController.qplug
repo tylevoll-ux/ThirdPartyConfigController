@@ -4,7 +4,7 @@
 -- Updated September 2026
 
 -- Information block for the plugin
-BuildVersion = "1.0.7.0" -- updated by the compiler
+BuildVersion = "1.1.0.0" -- updated by the compiler
 PluginInfo = {
   Name = "TylerPluginDevelopment~Third Party Configurator v".. BuildVersion, -- preferred format is "manufacturer~plugin name version"
   Version = BuildVersion,
@@ -36,10 +36,9 @@ function GetProperties()
   
   table.insert(props, {
     Name = "Automatic Updates Time",
-    Type = "enum",
-    Choices = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"},
-    Value = "None",
-    Comment = "0 = 12am, 23 = 11pm"
+    Type = "string",
+    Choices = "A String",
+    Comment = "Valid Format = Hour:Minute (24 Hour Time)"
   })
   
   table.insert(props, {
@@ -568,10 +567,14 @@ if Controls then
   
   --Reload Config At midnight to capture any changes--
   function scheduleNextCheck()
-      local day = os.date("%A")
-      local hour = tonumber(os.date("%H"))
-      local min = tonumber(os.date("%M"))
-      local daystbl = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+      day = os.date("%A")
+      hour = tonumber(os.date("%H"))
+      min = tonumber(os.date("%M"))
+      daystbl = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+      UserColon = string.find(varAutomaticTime, ":")
+      UserHour = tonumber(string.sub(varAutomaticTime, 1, UserColon - 1))
+      UserMinute = tonumber(string.sub(varAutomaticTime, UserColon + 1))
+      print(UserHour, UserMinute)
   
       for k,v in pairs(daystbl) do  
         if string.find(v, day) then
@@ -580,7 +583,7 @@ if Controls then
       end  
       --if hour == tonumber(varAutomaticTime) then
         if Controls.UpdateScheduleDays[varUpdateDay].Boolean == true then
-          if hour == tonumber(varAutomaticTime) then
+          if hour == UserHour and min == UserMinute then
             if Controls.Encryption.Boolean == true then
               funcReadEncryptedConfig()
             else 

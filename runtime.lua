@@ -212,10 +212,14 @@ end
 
 --Reload Config At midnight to capture any changes--
 function scheduleNextCheck()
-    local day = os.date("%A")
-    local hour = tonumber(os.date("%H"))
-    local min = tonumber(os.date("%M"))
-    local daystbl = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+    day = os.date("%A")
+    hour = tonumber(os.date("%H"))
+    min = tonumber(os.date("%M"))
+    daystbl = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
+    UserColon = string.find(varAutomaticTime, ":")
+    UserHour = tonumber(string.sub(varAutomaticTime, 1, UserColon - 1))
+    UserMinute = tonumber(string.sub(varAutomaticTime, UserColon + 1))
+    print(UserHour, UserMinute)
 
     for k,v in pairs(daystbl) do  
       if string.find(v, day) then
@@ -224,7 +228,7 @@ function scheduleNextCheck()
     end  
     --if hour == tonumber(varAutomaticTime) then
       if Controls.UpdateScheduleDays[varUpdateDay].Boolean == true then
-        if hour == tonumber(varAutomaticTime) then
+        if hour == UserHour and min == UserMinute then
           if Controls.Encryption.Boolean == true then
             funcReadEncryptedConfig()
           else 

@@ -7,10 +7,9 @@ table.insert(props, {
 
 table.insert(props, {
   Name = "Automatic Updates Time",
-  Type = "enum",
-  Choices = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"},
-  Value = "None",
-  Comment = "0 = 12am, 23 = 11pm"
+  Type = "string",
+  Choices = "A String",
+  Comment = "Valid Format = Hour:Minute (24 Hour Time)"
 })
 
 table.insert(props, {
